@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Gasto</title>
+    <link href="/css/tailwind.output.css" rel="stylesheet">
+</head>
+<body class="bg-base-200 min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-md bg-base-100 shadow-lg p-6 rounded-lg">
+        <h2 class="text-2xl font-semibold text-center mb-6">Agregar Gasto</h2>
+        <form id="expenseForm">
+            <div class="mb-4">
+                <label class="label">Monto</label>
+                <input type="number" name="amount" class="input input-bordered w-full" required>
+            </div>
+            <div class="mb-4">
+                <label class="label">Categoría</label>
+                <select name="category" class="select select-bordered w-full" required>
+                    <option value="Alimentos">Alimentos</option>
+                    <option value="Transporte">Transporte</option>
+                    <option value="Entretenimiento">Entretenimiento</option>
+                    <option value="Otros">Otros</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="label">Descripción</label>
+                <input type="text" name="description" class="input input-bordered w-full" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-full">Guardar Gasto</button>
+        </form>
+        <!-- Contenedor de mensajes -->
+        <div id="messageContainer" class="mt-4"></div>
+    </div>
+</body>
+</html>

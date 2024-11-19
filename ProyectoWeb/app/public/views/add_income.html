@@ -1,1 +1,34 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Ingreso</title>
+    <link href="/css/tailwind.output.css" rel="stylesheet">
+</head>
+<body class="bg-base-200 min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-md bg-base-100 shadow-lg p-6 rounded-lg">
+        <h2 class="text-2xl font-semibold text-center mb-6">Agregar Ingreso</h2>
+        <form id="incomeForm" action="/dashboard/add-income" method="POST">
+            <div class="mb-4">
+                <label class="label">Monto</label>
+                <input type="number" name="amount" class="input input-bordered w-full" required>
+            </div>
+            <div class="mb-4">
+                <label class="label">Fuente</label>
+                <select name="source" class="select select-bordered w-full" required>
+                    <option value="Salario">Salario</option>
+                    <option value="Freelance">Freelance</option>
+                    <option value="Inversiones">Inversiones</option>
+                    <option value="Otros">Otros</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label class="label">Descripción</label>
+                <input type="text" name="description" class="input input-bordered w-full">
+            </div>
+            <button type="submit" class="btn btn-primary w-full">Guardar Ingreso</button>
+        </form>
+    </div>
+</body>
+</html>
