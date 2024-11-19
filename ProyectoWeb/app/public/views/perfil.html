@@ -1,1 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
 
+
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="text-center">Perfil</h2>
+            <a href="/dashboard" class="btn btn-secondary">Regresar al Dashboard</a>
+        </div>
+
+        <!-- fromulario de datos personales -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">Actualizar Datos Personales</div>
+            <div class="card-body">
+                <form id="personalInfoForm">
+                    <div class="mb-3">
+                        <label for="monthlyIncome" class="form-label">Sueldo Mensual</label>
+                        <input type="number" id="monthlyIncome" name="monthlyIncome" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="averageExpenses" class="form-label">Promedio de Gastos</label>
+                        <input type="number" id="averageExpenses" name="averageExpenses" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="savingGoal" class="form-label">Meta de Ahorro</label>
+                        <input type="number" id="savingGoal" name="savingGoal" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+
+
+        <!-- Formulario de Gastos Fijos -->
+        <div class="card">
+            <div class="card-header bg-secondary text-white">Agregar Gastos Fijos</div>
+            <div class="card-body">
+                <form id="fixedExpensesForm">
+                    <div class="mb-3">
+                        <label for="expenseName" class="form-label">Nombre del Gasto</label>
+                        <input type="text" id="expenseName" name="expenseName" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="expenseAmount" class="form-label">Monto</label>
+                        <input type="number" id="expenseAmount" name="expenseAmount" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="expenseCategory" class="form-label">Categoría</label>
+                        <select id="expenseCategory" name="expenseCategory" class="form-select" required>
+                            <option value="Alquiler">Alquiler</option>
+                            <option value="Servicios">Servicios</option>
+                            <option value="Transporte">Transporte</option>
+                            <option value="Otros">Otros</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Agregar Gasto Fijo</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Script de interacción -->
+    <script>
+        //aqui se actualizan niestros datos personales
+        document.getElementById('personalInfoForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const data = {};
+
+            for (const [key, value] of formData.entries()) {
+                if (value.trim() !== '') {
+                    data[key] = value;
+                }
+            }
+
+            const response = await fetch('/profile/update-personal-info', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                alert('Datos personales actualizados correctamente.');
+                window.location.href = '/dashboard';
+            } else {
+                alert('Error al actualizar los datos personales.');
+            }
+        });
+
+        //agr gastos f.
+        document.getElementById('fixedExpensesForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const data = {};
+
+            for (const [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+
+            const response = await fetch('/profile/add-fixed-expense', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                alert('Gasto fijo agregado correctamente.');
+                window.location.href = '/dashboard';
+            } else {
+                alert('Error al agregar el gasto fijo.');
+            }
+        });
+    </script>
+</body>
+</html>
