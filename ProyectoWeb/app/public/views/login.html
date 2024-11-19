@@ -1,1 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link href="/css/tailwind.output.css" rel="stylesheet">
+</head>
+<body class="bg-base-200 min-h-screen flex items-center justify-center">
+    <!-- Contenedor del formulario de login -->
+    <div class="w-full max-w-md bg-base-100 shadow-lg p-6 rounded-lg">
+        <!-- Mensaje de éxito (se oculta inicialmente) -->
+        <div id="successMessage" class="alert alert-success w-full mb-4 hidden bg-blue-600">
+            <span class="text-white">Usuario registrado exitosamente. Por favor, inicie sesión.</span>
+        </div>
+
+        <!-- Título de login -->
+        <h2 class="text-2xl font-semibold text-center mb-6">Iniciar Sesión</h2>
+
+        <!-- Formulario de login -->
+        <form action="/auth/login" method="POST">
+            <div class="mb-4">
+                <label class="label">Correo Electrónico</label>
+                <input type="email" name="email" class="input input-bordered w-full" required>
+            </div>
+            <div class="mb-4">
+                <label class="label">Contraseña</label>
+                <input type="password" name="password" class="input input-bordered w-full" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-full">Iniciar Sesión</button>
+        </form>
+    </div>
+
+    <!-- Script para mostrar el mensaje de éxito si está presente en la URL -->
+   <!---<script>
+        // Verifica si la URL contiene el parámetro success=true
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success') === 'true') {
+            document.getElementById('successMessage').classList.remove('hidden');
+        }
+    </script> ---> 
+</body>
+</html>
 

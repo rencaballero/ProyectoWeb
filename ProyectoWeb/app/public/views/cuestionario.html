@@ -1,1 +1,41 @@
+<!-- public/cuestionario.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario Financiero</title>
+    <link href="../css/tailwind.output.css" rel="stylesheet">
+</head>
+<body class="bg-base-200 flex items-center justify-center min-h-screen">
+    <div class="card w-full max-w-lg shadow-2xl bg-base-100 p-8">
+        <h2 class="text-2xl font-semibold text-center mb-6">Cuestionario Financiero</h2>
+        <form action="/cuestionario" method="POST" class="space-y-4">
+            <div class="form-control">
+                <label class="label">Sueldo Mensual</label>
+                <input type="number" name="monthlyIncome" placeholder="Sueldo Mensual" class="input input-bordered" required>
+            </div>
+            <div class="form-control">
+                <label class="label">Promedio de Gastos Mensuales</label>
+                <input type="number" name="averageExpenses" placeholder="Gastos Mensuales" class="input input-bordered" required>
+            </div>
+            <div class="form-control">
+                <label class="label">Ingresos Adicionales</label>
+                <input type="number" name="additionalIncome" placeholder="Ingresos Adicionales" class="input input-bordered">
+            </div>
+            <div class="form-control">
+                <label class="label">Meta de Ahorro Mensual</label>
+                <input type="number" name="savingGoal" placeholder="Meta de Ahorro" class="input input-bordered">
+            </div>
+            <div class="form-control">
+                <label class="label">Meta de Gastos Mensuales</label>
+                <input type="number" name="spendingGoal" placeholder="Meta de Gastos" class="input input-bordered">
+            </div>
+            <div class="form-control mt-6">
+                <button type="submit" class="btn btn-primary w-full">Guardar Información</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
 

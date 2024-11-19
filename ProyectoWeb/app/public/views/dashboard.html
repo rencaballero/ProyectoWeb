@@ -1,1 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="/css/tailwind.output.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-base-200 min-h-screen flex">
+
+    <!-- Sidebar -->
+    <div class="w-64 bg-base-100 shadow-lg hidden lg:block h-screen">
+        <div class="p-4 text-xl font-semibold">Mi Dashboard</div>
+        <ul class="menu p-4">
+            <li><a href="#dashboard">Inicio</a></li>
+            <li><a href="/dashboard/add-income">Agregar Ingreso</a></li>
+            <li><a href="/dashboard/add-expense">Agregar Gasto</a></li>
+            <li><a href="/profile">Perfil</a></li>
+        </ul>
+    </div>
+
+    <!-- Contenedor Principal -->
+    <div class="flex-1 p-8 overflow-y-auto">
+        <div class="w-full max-w-4xl mx-auto bg-base-100 shadow-lg p-6 rounded-lg min-h-[80vh]">
+            <!-- Título del dashboard -->
+            <h2 class="text-3xl font-semibold text-center mb-6">Resumen Financiero</h2>
+
+            <!-- Gráfica -->
+            <div class="flex justify-center mb-8">
+                <div style="width: 300px; height: 300px;">
+                    <canvas id="expensesChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Sección de desglose de datos -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Tarjeta de Ingresos -->
+                <div class="card bg-base-100 shadow-md p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">Ingresos Mensuales</h3>
+                        <span class="badge badge-success badge-lg">Disponible</span>
+                    </div>
+                    <p class="text-2xl font-bold text-gray-800">$<span id="incomeAmount">0</span></p>
+                </div>
+
+                <!-- Tarjeta de Gastos Fijos -->
+                <div class="card bg-base-100 shadow-md p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">Gastos Fijos</h3>
+                        <span class="badge badge-info badge-lg">Fijos</span>
+                    </div>
+                    <ul id="fixedExpensesList" class="list-disc ml-5 text-gray-800 space-y-2">
+                        <!-- Gastos fijos se mostrarán aquí -->
+                    </ul>
+                </div>
+
+                <!-- Tarjeta de Gastos Variables -->
+                <div class="card bg-base-100 shadow-md p-4">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">Gastos Totales</h3>
+                        <span class="badge badge-error badge-lg">Variables</span>
+                    </div>
+                    <p class="text-2xl font-bold text-gray-800">$<span id="expensesAmount">0</span></p>
+                </div>
+            </div>
+
+            <!-- Historial de Transacciones -->
+            <div id="transactionHistory" class="mt-8">
+                <h2 class="text-2xl font-semibold mb-6 text-center">Historial de Transacciones</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Historial de Gastos -->
+                    <div class="card bg-base-100 shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Gastos</h3>
+                        <ul id="expensesList" class="space-y-4"></ul>
+                    </div>
+
+                    <!-- Historial de Ingresos -->
+                    <div class="card bg-base-100 shadow-md p-6">
+                        <h3 class="text-xl font-semibold mb-4">Ingresos</h3>
+                        <ul id="incomesList" class="space-y-4"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        async function fetchDashboardData() {
+            const response = await fetch('/dashboard/api/dashboard-data');
+            const data = await response.json();
+            return data;
+        }
+
+        async function renderDashboard() {
+    const data = await fetchDashboardData();
+    console.log("Datos recibidos del backend:", data); // Log para depuración
+
+    // Actualizar las tarjetas principales
+    document.getElementById("incomeAmount").textContent = data.monthlyIncome.toFixed(2);
+    document.getElementById("expensesAmount").textContent = data.variableExpenses.toFixed(2);
+
+    // Mostrar gastos fijos en la lista
+    const fixedExpensesList = document.getElementById("fixedExpensesList");
+    fixedExpensesList.innerHTML = data.fixedExpensesDetails.map(fixed =>
+        `<li>${fixed.description} - $${fixed.amount.toFixed(2)} (${fixed.category})</li>`
+    ).join("");
+
+    // Mostrar ingresos en la lista de ingresos
+    const incomesList = document.getElementById("incomesList");
+    incomesList.innerHTML = data.incomesDetails.map(income =>
+        `<li class="p-4 bg-success text-white rounded-lg">
+            <div class="flex justify-between">
+                <span>${new Date(income.date).toLocaleDateString()}</span>
+                <span class="font-bold">$${income.amount.toFixed(2)}</span>
+            </div>
+            <div class="flex justify-between mt-2">
+                <span class="italic">${income.source}</span>
+                <span>${income.description || ''}</span>
+            </div>
+        </li>`
+    ).join("");
+
+    // Mostrar gastos variables en la lista de gastos
+    const expensesList = document.getElementById("expensesList");
+    expensesList.innerHTML = data.expensesDetails.map(expense =>
+        `<li class="p-4 bg-error text-white rounded-lg">
+            <div class="flex justify-between">
+                <span>${new Date(expense.date).toLocaleDateString()}</span>
+                <span class="font-bold">$${expense.amount.toFixed(2)}</span>
+            </div>
+            <div class="flex justify-between mt-2">
+                <span class="italic">${expense.category}</span>
+                <span>${expense.description || ''}</span>
+            </div>
+        </li>`
+    ).join("");
+
+    // Actualizar la gráfica
+    const ctx = document.getElementById("expensesChart").getContext("2d");
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Gastos Variables', 'Gastos Fijos', 'Disponible'],
+            datasets: [{
+                data: [data.variableExpenses, data.fixedExpenses, data.remainingBalance],
+                backgroundColor: ['#ff6384', '#ffcd56', '#4bc0c0']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: true }
+            }
+        }
+    });
+}
+
+
+renderDashboard();
+    </script>
+</body>
+</html>
 
