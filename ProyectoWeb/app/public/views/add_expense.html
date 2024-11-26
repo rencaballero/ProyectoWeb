@@ -32,5 +32,37 @@
         <!-- Contenedor de mensajes -->
         <div id="messageContainer" class="mt-4"></div>
     </div>
+    <script>
+        document.getElementById('expenseForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const expenseData = {
+                amount: parseFloat(formData.get('amount')),
+                category: formData.get('category'),
+                description: formData.get('description')
+            };
+
+            // Envía los datos al backend
+            const response = await fetch('/dashboard/add-expense', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(expenseData)
+            });
+
+            const result = await response.json();
+
+            // Mostrar el mensaje de éxito o error
+            const messageContainer = document.getElementById('messageContainer');
+            messageContainer.innerHTML = `<div class="alert ${result.success ? 'alert-success' : 'alert-error'}">${result.message || result.error}</div>`;
+
+            if (result.success) {
+                e.target.reset();  // Limpia el formulario en caso de éxito
+                setTimeout(() => {
+                    window.location.href = '/dashboard';  // Redirige al dashboard después de 1 segundo
+                }, 1000);
+            }
+        });
+    </script>
 </body>
 </html>

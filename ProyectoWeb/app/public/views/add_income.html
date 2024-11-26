@@ -30,5 +30,41 @@
             <button type="submit" class="btn btn-primary w-full">Guardar Ingreso</button>
         </form>
     </div>
+    <script>
+        document.getElementById('incomeForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+    
+            const formData = new FormData(e.target);
+            const incomeData = {
+                amount: parseFloat(formData.get('amount')),
+                source: formData.get('source'),
+                description: formData.get('description')
+            };
+    
+            // Envía los datos al backend
+            const response = await fetch('/dashboard/add-income', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(incomeData)
+            });
+    
+            const result = await response.json();
+            
+            // Muestra el mensaje de éxito o error
+            const messageContainer = document.createElement('div');
+            messageContainer.classList.add('alert', result.success ? 'alert-success' : 'alert-error', 'mt-4');
+            messageContainer.innerHTML = `<span>${result.message || result.error}</span>`;
+    
+            // Agrega el mensaje al formulario
+            e.target.insertAdjacentElement('beforebegin', messageContainer);
+    
+            if (result.success) {
+                e.target.reset();  // Limpia el formulario en caso de éxito
+                setTimeout(() => {
+                    window.location.href = '/dashboard';  // Redirige al dashboard después de 1 segundo
+                }, 1000);
+            }
+        });
+    </script>
 </body>
 </html>
